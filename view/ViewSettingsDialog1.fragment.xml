@@ -1,0 +1,176 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+    <ViewSettingsDialog>
+        
+        <filterItems>
+            
+            <ViewSettingsFilterItem text="Material" key="Material"
+                                    items="{path: '/Material'}">
+                <items>
+                    <ViewSettingsItem key="String___Material___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="Quantidade" key="Quantidade"
+                                    items="{path: '/Quantidade'}">
+                <items>
+                    <ViewSettingsItem key="String___Quantidade___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="Lote" key="Lote"
+                                    items="{path: '/Lote'}">
+                <items>
+                    <ViewSettingsItem key="String___Lote___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="Resultado" key="Resultado"
+                                    items="{path: '/Resultado'}">
+                <items>
+                    <ViewSettingsItem key="String___Resultado___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="Pedido" key="Pedido"
+                                    items="{path: '/Pedido'}">
+                <items>
+                    <ViewSettingsItem key="String___Pedido___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="LoteAgricola" key="LoteAgricola"
+                                    items="{path: '/LoteAgricola'}">
+                <items>
+                    <ViewSettingsItem key="String___LoteAgricola___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="Empresa" key="Empresa"
+                                    items="{path: '/Empresa'}">
+                <items>
+                    <ViewSettingsItem key="String___Empresa___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="Licenca" key="Licenca"
+                                    items="{path: '/Licenca'}">
+                <items>
+                    <ViewSettingsItem key="String___Licenca___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsCustomItem text="Data"
+                                    filterCount="{parts:[{path:'/Data/vValueLT'}, {path:'/Data/vValueGT'}], formatter:'.filterCountFormatter'}">
+                <customControl>
+                    <l:VerticalLayout width="100%">
+                        <Toolbar>
+                            <Label width="25%" text="Before" class="sapUiSmallMarginBegin"/>
+                            <DatePicker width="33%" value="{path: '/Data/vValueLT'}"
+                                        valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+                        </Toolbar>
+                        <Toolbar>
+                            <Label width="25%" text="After" class="sapUiSmallMarginBegin"/>
+                            <DatePicker width="33%" value="{path: '/Data/vValueGT'}"
+                                        valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+                        </Toolbar>
+                    </l:VerticalLayout>
+                </customControl>
+            </ViewSettingsCustomItem>
+            
+            
+            <ViewSettingsFilterItem text="Status" key="Status"
+                                    items="{path: '/Status'}">
+                <items>
+                    <ViewSettingsItem key="String___Status___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="CorStatus" key="CorStatus"
+                                    items="{path: '/CorStatus'}">
+                <items>
+                    <ViewSettingsItem key="String___CorStatus___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+            <ViewSettingsFilterItem text="Impressao" key="Impressao"
+                                    items="{path: '/Impressao'}">
+                <items>
+                    <ViewSettingsItem key="String___Impressao___{}" text="{}"></ViewSettingsItem>
+                </items>
+            </ViewSettingsFilterItem>
+            
+            
+        </filterItems>
+        
+
+        
+        <sortItems>
+            
+            <ViewSettingsItem text="Material" key="Material"/>
+            
+            <ViewSettingsItem text="Quantidade" key="Quantidade"/>
+            
+            <ViewSettingsItem text="Lote" key="Lote"/>
+            
+            <ViewSettingsItem text="Resultado" key="Resultado"/>
+            
+            <ViewSettingsItem text="Pedido" key="Pedido"/>
+            
+            <ViewSettingsItem text="LoteAgricola" key="LoteAgricola"/>
+            
+            <ViewSettingsItem text="Empresa" key="Empresa"/>
+            
+            <ViewSettingsItem text="Licenca" key="Licenca"/>
+            
+            <ViewSettingsItem text="Data" key="Data"/>
+            
+            <ViewSettingsItem text="Status" key="Status"/>
+            
+            <ViewSettingsItem text="CorStatus" key="CorStatus"/>
+            
+            <ViewSettingsItem text="Impressao" key="Impressao"/>
+            
+        </sortItems>
+        
+
+        
+        <groupItems>
+            
+            <ViewSettingsItem text="Material" key="Material"/>
+            
+            <ViewSettingsItem text="Quantidade" key="Quantidade"/>
+            
+            <ViewSettingsItem text="Lote" key="Lote"/>
+            
+            <ViewSettingsItem text="Resultado" key="Resultado"/>
+            
+            <ViewSettingsItem text="Pedido" key="Pedido"/>
+            
+            <ViewSettingsItem text="LoteAgricola" key="LoteAgricola"/>
+            
+            <ViewSettingsItem text="Empresa" key="Empresa"/>
+            
+            <ViewSettingsItem text="Licenca" key="Licenca"/>
+            
+            <ViewSettingsItem text="Data" key="Data"/>
+            
+            <ViewSettingsItem text="Status" key="Status"/>
+            
+            <ViewSettingsItem text="CorStatus" key="CorStatus"/>
+            
+            <ViewSettingsItem text="Impressao" key="Impressao"/>
+            
+        </groupItems>
+        
+    </ViewSettingsDialog>
+</core:FragmentDefinition>

@@ -1,0 +1,64 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" controllerName="com.sap.build.standard.qm20.controller.PopupDadosAd" xmlns="sap.m"
+	xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form">
+	<Dialog title="Informar dados adicionais" contentWidth="900px" contentHeight="500px" draggable="true">
+		<!--stretch="true"-->
+		<!--type="Standard"-->
+		<!--contentWidth="1200px" auto-->
+		<!--contentHeight="500px" auto-->
+		<f:SimpleForm id="ddsAdicionais" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="3" labelSpanM="4" labelSpanS="12"
+			adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+			singleContainerFullSize="false">
+			<f:content>
+				<Label labelFor="nacio" text="Nacionalidade" width="250px"/>
+				<Input id="nacio" value="{nacio}" placeholder="Informar a Nacionalidade..." width="550px" maxLength="100"/>
+				
+				<Label labelFor="nome" text="Nome" width="250px"/>
+				<Input id="nome" value="{nome}" placeholder="Informar o Nome..." width="550px" maxLength="100"/>
+				
+				<Label labelFor="ender" text="Endereço" width="250px"/>
+				<Input id="ender" value="{ender}" placeholder="Informar o Endereço..." width="550px" maxLength="100"/>
+				
+				<Label labelFor="respca" text="Responsável pelo Certificado de Análise" width="250px"/>
+				<Input id="respca" value="{respca}" placeholder="Informar o Responsável pelo Certificado de Análise..." width="550px" maxLength="100"/>
+				
+				<Label labelFor="cargo" text="Cargo" width="250px"/>
+				<Input id="cargo" value="{cargo}" placeholder="Informar o Cargo..." width="550px" maxLength="100"/>
+				
+				<Label labelFor="pais" text="País" width="250px"/>
+				<Input id="pais" value="{pais}" placeholder="Informar o País..." width="550px" maxLength="100"/>
+				
+				<Label labelFor="emp" text="Empresa" width="250px"/>
+				<Input id="emp" value="{emp}" placeholder="Informar a Empresa..." width="550px" maxLength="100"/>
+				
+				<Label labelFor="dtresp" text="Data da recepção" width="250px"/>
+				<!--<DatePicker id="DP2" dateValue="{dtresp}" width="200px"/>-->
+				<Input id="dtresp" value="{dtresp}" placeholder="DD.MM.AAAA..." width="120px" maxLength="100"/>
+				
+				<Label labelFor="dtanalis" text="Data da análise" width="250px"/>
+				<!--<DatePicker id="DP1" dateValue="{dtanalis}" width="200px"/>-->
+				<Input id="dtanalis" value="{dtanalis}" placeholder="DD.MM.AAAA..." width="120px" maxLength="100"/>
+				
+				<!--<Label labelFor="impu1" text="Impureza 1 %" width="250px"/>-->
+				<Label labelFor="impu1" text="{impu1_txt}" width="250px"/>
+				<Input id="impu1" value="{impu1}" placeholder="%..." width="90px" maxLength="3"  description="%" type="Number"/>
+				
+				<!--<Label labelFor="impu2" text="Impureza 2 %" width="250px"/>-->
+				<Label labelFor="impu2" text="{impu2_txt}" width="250px"/>
+				<Input id="impu2" value="{impu2}" placeholder="%..." width="90px" maxLength="3" description="%" type="Number"/>
+					
+				<!--<Label labelFor="impu3" text="Impureza 3 %" width="250px"/>-->
+				<Label labelFor="impu3" text="{impu3_txt}" width="250px"/>
+				<Input id="impu3" value="{impu3}" placeholder="%..." width="90px" maxLength="3" description="%" type="Number"/>
+					
+				<Label labelFor="respamo" text="Responsável pela amostragem" width="250px"/>
+				<Input id="respamo" value="{respamo}" placeholder="Responsável pela amostragem..." width="550px" maxLength="100"/>
+			</f:content>
+		</f:SimpleForm>
+		<buttons>
+			<Button text="Confirmar" type="Accept" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false"
+				press="_onButtonPress"/>
+			<Button text="Cancelar" type="Reject" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false"
+				press="_onButtonPress1"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>

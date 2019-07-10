@@ -1,0 +1,24 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" controllerName="com.sap.build.standard.qm20.controller.Popover1" xmlns="sap.m">
+    <ResponsivePopover contentHeight="auto" contentWidth="250px" horizontalScrolling="true" modal="false" offsetX="0" offsetY="0" placement="Right" showHeader="true" title="Escolha sua impressão" verticalScrolling="true" visible="true">
+        <content>
+            <HBox alignItems="Center" direction="Row" fitContainer="false" width="auto" height="auto" justifyContent="SpaceAround" renderType="Div" visible="true" displayInline="false">
+                <items>
+                    <VBox alignItems="Stretch" direction="Column" fitContainer="false" width="auto" height="auto" justifyContent="Start" renderType="Div" visible="true" displayInline="false">
+                        <items>
+                            <Button text="INC02" type="Default" iconFirst="true" width="100%" enabled="true" visible="true" iconDensityAware="false" press="_onButtonPress"/>
+                            <Button text="ADITAMENTO" type="Default" iconFirst="true" width="100%" enabled="true" visible="true" iconDensityAware="false" press="_onButtonPress1"/>
+                        </items>
+                        <layoutData/>
+                    </VBox>
+                </items>
+                <layoutData/>
+            </HBox>
+        </content>
+        <beginButton/>
+        <customHeader/>
+        <endButton>
+            <Button text="Cancelar" type="Reject" iconFirst="true" width="auto" enabled="true" visible="true" iconDensityAware="false" press="_onButtonPress2"/>
+        </endButton>
+        <subHeader/>
+    </ResponsivePopover>
+</core:FragmentDefinition>
