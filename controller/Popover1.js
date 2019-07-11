@@ -2,8 +2,10 @@ sap.ui.define([
 	"sap/ui/base/ManagedObject",
 	"sap/m/MessageBox",
 	"./utilities",
-	"sap/ui/core/routing/History"
-], function (ManagedObject, MessageBox, Utilities, History) {
+	"sap/ui/core/routing/History",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator"
+], function (ManagedObject, MessageBox, Utilities, History, Filter, FilterOperator) {
 
 	return ManagedObject.extend("com.sap.build.standard.qm20.controller.Popover1", {
 		constructor: function (oView) {
@@ -20,43 +22,54 @@ sap.ui.define([
 			return this._oView;
 		},
 
-		// onDownload: function () {
-
-		// 	var oModel = this.getView().getModel(),
-		// 		oExtensionProperties = this.getView().getModel();
-		// 	oModel.read(oExtensionProperties.getProperty("/FormPDFSet"), {
-		// 		success: function (oData) {
-		// 			if (oData.Printed) {
-		// 				//if (typeof safari !== "undefined") {
-		// 				// var oWindow = safari.application.openBrowserWindow();
-		// 				// oWindow.activeTab.url = oData.__metadata.media_src;
-		// 				//} else {
-		// 				sap.m.URLHelper.redirect(oData.__metadata.media_src, true);
-		// 				//}
-		// 			} else {
-		// 				sap.m.MessageToast.show("DOWNLOAD_ERROR");
-		// 			}
-		// 		}.bind(this)
-		// 	});
-		// },
-
 		onDownload: function () {
 			var oView = this.getView(),
 				oTable = oView.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084"),
-				aContexts = oTable.getSelectedContexts(), 
-				mProperty = aContexts.length > 0 && Object.assign({}, aContexts[0].getProperty()),
+				aProperties = oTable.getSelectedContexts().map(function(oContext) {
+					return Object.assign({}, oContext.getProperty());
+				}),
 				oModel = oView.getModel(),
-				sPath = oModel.createKey("/FormPDFSet", {
-					ebeln: mProperty.ebeln,
-					ebelp: mProperty.ebelp
+				oFilter = new Filter({
+					and: false,
+					filters: aProperties.map(function (mContext) {
+						return new Filter({
+							filters: [
+								new Filter("ebeln", FilterOperator.EQ, mContext.ebeln),
+								new Filter("ebelp", FilterOperator.EQ, mContext.ebelp)
+							]
+						});
+					})
 				});
-				
-			oModel.read(sPath, {
-				success: function (oData, Response) {
-					sap.m.URLHelper.redirect(new URL(oData.__metadata.media_src).pathname, true);
-				}
+			oModel.read("/FormPDFSet", {
+					filters: [oFilter],
+					success: function (oData) {
+						sap.m.URLHelper.redirect(new URL( oData.results[0].__metadata.media_src).pathname);
+					},
+					error: function (err) {
+
+					}
+
 			});
 		},
+
+		// onDownload: function () {
+		// 	var oView = this.getView(),
+		// 		oTable = oView.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084"),
+		// 		aContexts = oTable.getSelectedContexts(),
+		// 		mProperty = aContexts.length > 0 && Object.assign({}, aContexts[0].getProperty()),
+		// 		oModel = oView.getModel(),
+		// 		sPath = oModel.createKey("/FormPDFSet", {
+		// 			ebeln: mProperty.ebeln,
+		// 			ebelp: mProperty.ebelp
+		// 		});
+
+		// 	oModel.read(sPath, {
+		// 		success: function (oData, Response) {
+		// 			sap.m.URLHelper.redirect(new URL(oData.__metadata.media_src).pathname, true);
+		// 		}
+		// 	});
+
+		// },
 
 		getControl: function () {
 			return this._oControl;
@@ -113,8 +126,7 @@ sap.ui.define([
 					at: sTargetPos,
 					my: sTargetPos
 				});
-			}.bind(this)
-			).catch(function (err) {
+			}.bind(this)).catch(function (err) {
 				if (err !== undefined) {
 					MessageBox.error(err.message);
 				}

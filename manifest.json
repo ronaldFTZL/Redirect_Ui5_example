@@ -98,7 +98,9 @@
 				"clearTarget": false,
 				"controlAggregation": "pages",
 				"bypassed": {
-					"target": ["Page1"]
+					"target": [
+						"Page1"
+					]
 				}
 			},
 			"targets": {
@@ -114,19 +116,26 @@
 					"viewName": "Popup_Dados_Ad"
 				}
 			},
-			"routes": [{
-				"pattern": "Page1/:context:",
-				"name": "Page1",
-				"target": ["Page1"]
-			}, {
-				"pattern": "",
-				"name": "default",
-				"target": ["Page1"]
-			}]
+			"routes": [
+				{
+					"pattern": "Page1/:context:",
+					"name": "Page1",
+					"target": [
+						"Page1"
+					]
+				},
+				{
+					"pattern": "",
+					"name": "default",
+					"target": [
+						"Page1"
+					]
+				}
+			]
 		}
 	},
 	"sap.platform.abap": {
-		"uri": "/sap/bc/ui5_ui5/sap/zui5_ctrl_inc02/webapp",
+		"uri": "/sap/bc/ui5_ui5/sap/zui5_ctrl_inc02",
 		"_version": "1.1.0"
 	}
 }
