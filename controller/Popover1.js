@@ -23,53 +23,113 @@ sap.ui.define([
 		},
 
 		onDownload: function () {
-			var oView = this.getView(),
+	var oView = this.getView(),
 				oTable = oView.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084"),
-				aProperties = oTable.getSelectedContexts().map(function(oContext) {
+				aProperties = oTable.getSelectedContexts().map(function (oContext) {
 					return Object.assign({}, oContext.getProperty());
 				}),
-				oModel = oView.getModel(),
-				oFilter = new Filter({
-					and: false,
-					filters: aProperties.map(function (mContext) {
-						return new Filter({
-							filters: [
-								new Filter("ebeln", FilterOperator.EQ, mContext.ebeln),
-								new Filter("ebelp", FilterOperator.EQ, mContext.ebelp)
-							]
-						});
-					})
-				});
-			oModel.read("/FormPDFSet", {
-					filters: [oFilter],
-					success: function (oData) {
-						sap.m.URLHelper.redirect(new URL( oData.results[0].__metadata.media_src).pathname);
-					},
-					error: function (err) {
+				oModel = oView.getModel();
 
-					}
+			var requestBody = {
+				"spoolId": 1,
+				"nameForm": "INC02",
+				"HeaderToDataNav": aProperties.map(function (mContext) {
+					return {
+						ebeln: mContext.ebeln,
+						ebelp: mContext.ebelp
+					};
+				})
+			};
+
+			oModel.create("/HeaderPDFSet", requestBody, {
+				success: function (oData) {
+			
+				var	oFilter = new Filter({
+				and: true,
+				filters: aProperties.map(function (mContext) {
+					return new Filter({
+						filters: [
+							new Filter("spoolid", FilterOperator.EQ, oData.spoolId.toString()),
+							
+						],
+					});
+				})
+			});
+				 oModel.read("/FormPDFSet", {
+				filters: [oFilter],
+				 success: function (oData) {
+					sap.m.URLHelper.redirect(new URL(oData.results[0].__metadata.media_src).pathname);
+				},
+				error: function (err) {
+					sap.m.MessageToast.show("Erro ao Gerar Link de Donwload");	
+				}
 
 			});
+
+				},
+				error: function () {
+					sap.m.MessageToast.show("Erro ao Gerar Spool");
+				}
+
+			});
+
+
 		},
 
-		// onDownload: function () {
-		// 	var oView = this.getView(),
-		// 		oTable = oView.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084"),
-		// 		aContexts = oTable.getSelectedContexts(),
-		// 		mProperty = aContexts.length > 0 && Object.assign({}, aContexts[0].getProperty()),
-		// 		oModel = oView.getModel(),
-		// 		sPath = oModel.createKey("/FormPDFSet", {
-		// 			ebeln: mProperty.ebeln,
-		// 			ebelp: mProperty.ebelp
-		// 		});
+		onDownloadAdi: function () {
+			var oView = this.getView(),
+				oTable = oView.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084"),
+				aProperties = oTable.getSelectedContexts().map(function (oContext) {
+					return Object.assign({}, oContext.getProperty());
+				}),
+				oModel = oView.getModel();
 
-		// 	oModel.read(sPath, {
-		// 		success: function (oData, Response) {
-		// 			sap.m.URLHelper.redirect(new URL(oData.__metadata.media_src).pathname, true);
-		// 		}
-		// 	});
+			var requestBody = {
+				"spoolId": 1,
+				"nameForm": "ADITAMENTO",
+				"HeaderToDataNav": aProperties.map(function (mContext) {
+					return {
+						ebeln: mContext.ebeln,
+						ebelp: mContext.ebelp
+					};
+				})
+			};
 
-		// },
+			oModel.create("/HeaderPDFSet", requestBody, {
+				success: function (oData) {
+			
+				var	oFilter = new Filter({
+				and: true,
+				filters: aProperties.map(function (mContext) {
+					return new Filter({
+						filters: [
+							new Filter("spoolid", FilterOperator.EQ, oData.spoolId.toString()),
+							
+						],
+					});
+				})
+			});
+				 oModel.read("/FormPDFSet", {
+				filters: [oFilter],
+				 success: function (oData) {
+					sap.m.URLHelper.redirect(new URL(oData.results[0].__metadata.media_src).pathname);
+				},
+				error: function (err) {
+					sap.m.MessageToast.show("Erro ao Gerar Link de Donwload");	
+				}
+
+			});
+
+				},
+				error: function () {
+					sap.m.MessageToast.show("Erro ao Gerar Spool");
+				}
+
+			});
+
+
+
+		},
 
 		getControl: function () {
 			return this._oControl;
@@ -137,13 +197,14 @@ sap.ui.define([
 			return new Promise(function (fnResolve) {
 				var sTargetPos = "center center";
 				sTargetPos = (sTargetPos === "default") ? undefined : sTargetPos;
+				this.onDownloadAdi();
 				sap.m.MessageToast.show("Impressão Aditamento feita", {
 					onClose: fnResolve,
 					duration: 0 || 3000,
 					at: sTargetPos,
 					my: sTargetPos
 				});
-			}).catch(function (err) {
+			}.bind(this)).catch(function (err) {
 				if (err !== undefined) {
 					MessageBox.error(err.message);
 				}

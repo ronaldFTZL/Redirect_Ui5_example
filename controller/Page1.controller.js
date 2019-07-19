@@ -9,18 +9,19 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 	"sap/ui/core/format/DateFormat",
 	"sap/ui/core/util/Export",
 	"sap/ui/core/util/ExportTypeCSV"
-], function(BaseController, MessageBox, Dialog4, Dialog3, Popover1, Dialog1, Dialog2, PopupDadosAd, Utilities, MessageToast, Filter, History, JSONModel, DateFormat, Export, ExportTypeCSV) {
+], function (BaseController, MessageBox, Dialog4, Dialog3, Popover1, Dialog1, Dialog2, PopupDadosAd, Utilities, MessageToast, Filter,
+	History, JSONModel, DateFormat, Export, ExportTypeCSV) {
 	"use strict";
 
 	return BaseController.extend("com.sap.build.standard.qm20.controller.Page1", {
-		handleRouteMatched: function(oEvent) {
+		handleRouteMatched: function (oEvent) {
 			var oParams = {};
 
 			if (oEvent.getParameter("data").context) {
 				this.sContext = oEvent.getParameter("data").context;
 			} else {
 				if (this.getOwnerComponent().getComponentData()) {
-					var patternConvert = function(oParam) {
+					var patternConvert = function (oParam) {
 						if (Object.keys(oParam).length !== 0) {
 							for (var prop in oParam) {
 								if (prop !== "sourcePrototype" && prop.includes("Set")) {
@@ -44,8 +45,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			}
 
 		},
-		
-		_onPageNavButtonPress: function() {
+
+		_onPageNavButtonPress: function () {
 			var oHistory = History.getInstance();
 			var sPreviousHash = oHistory.getPreviousHash();
 			var oQueryParams = this.getQueryParameters(window.location);
@@ -58,7 +59,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			}
 
 		},
-		getQueryParameters: function(oLocation) {
+		getQueryParameters: function (oLocation) {
 			var oQuery = {};
 			var aParams = oLocation.search.substring(1).split("&");
 			for (var i = 0; i < aParams.length; i++) {
@@ -68,7 +69,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			return oQuery;
 
 		},
-		_onButtonPress: function(oEvent) {
+		_onButtonPress: function (oEvent) {
 
 			var sDialogName = "Dialog1";
 			this.mDialogs = this.mDialogs || {};
@@ -85,11 +86,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			oDialog._oControl.setBindingContext(context);
 
 			oDialog.open();
-			
-			},
-			
-			
-		_onButtonPress1: function(oEvent) {
+
+		},
+
+		_onButtonPress1: function (oEvent) {
 
 			var sDialogName = "Dialog2";
 			this.mDialogs = this.mDialogs || {};
@@ -100,42 +100,52 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 
 				// For navigation.
 				oDialog.setRouter(this.oRouter);
-			}
-
-			var context = oEvent.getSource().getBindingContext();
+			}	
+			var oView = this.getView(),
+				oTable = oView.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084");
+			
+ 
+			// var context = oEvent.getSourdce().getBindingContext();
+			var context = oTable.getSelectedContexts();
+			
+			
 			oDialog._oControl.setBindingContext(context);
 
 			oDialog.open();
 
 		},
-		
-		_onButtonPress4: function(oEvent) {
-			var lineIndex = this.getView().byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084").getSelectedIndices();
-			var bindingContext =  this.getView().byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084").getRows()[lineIndex[0]].getBindingContext();
-			var vPath = bindingContext.sPath;
-			
-//  		Verifica se foi selecionada apenas uma unica linha
-			if ( lineIndex.length >= 2 ){
-                    MessageToast.show("Selecione apenas um registro por vez!");
-                    return;
-                    
-            } else if ( lineIndex.length == 0 ){
-                    MessageToast.show("Selecione uma linha para atualizar as informações!"); 
-                    return;
-            }
-			
-			
-			
-			if( bindingContext.getProperty("ddsqm") == true ||
-			    bindingContext.getProperty("ddsqm") == "X"  ){
-				    MessageToast.show("Infomações vindas de QM não podem ser alteradas"); 
-                    return;
+
+		_onButtonPress4: function (oEvent) {
+			var	oTable = this.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084"),
+			    lineIndex = oTable.getSelectedItems().length,
+			    context = oTable.getSelectedItems(),
+				bindingContext = this.getView().byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084").getSelectedContextPaths();
+			var vPath = bindingContext[0],
+				oView = this.getView(),
+				model = oView.getModel(),
+				aProperties = oTable.getSelectedContexts().map(function (oContext) {
+					return Object.assign({}, oContext.getProperty());
+				});
+
+			//  		Verifica se foi selecionada apenas uma unica linha
+			if (lineIndex >= 2) {
+				MessageBox.error("Selecione apenas um registro por vez!");
+				return;
+
+			} else if (lineIndex == 0) {
+				MessageBox.error("Selecione uma linha para atualizar as informações!");
+				return;
 			}
-			
-			
-			if( bindingContext.getProperty("stats") == "2" ){
-				    MessageToast.show("Não é possível efetuar alterações itens já finalizados"); 
-                    return;
+
+			if (aProperties[0].ddsqm == true ||
+				aProperties[0].ddsqm == "X") {
+					MessageBox.error("Infomações vindas de QM não podem ser alteradas");
+				return;
+			}
+
+			if (aProperties[0].stats == "2") {
+					MessageBox.error("Não é possível efetuar alterações itens já finalizados");
+				return;
 			}
 
 			var sDialogName = "PopupDadosAd";
@@ -150,7 +160,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			}
 
 			// var context = oEvent.getSource().getBindingContext();
-			// oDialog._oControl.setBindingContext(context);
+			oDialog._oControl.setBindingContext(model.mContexts);
 			oDialog._oControl.bindObject({
 				path: vPath
 			});
@@ -330,7 +340,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		// 	updateDialogData(designTimeFilters);
 
 		// },
-		updateBindingOptions: function(sCollectionId, oBindingData, sSourceId) {
+		updateBindingOptions: function (sCollectionId, oBindingData, sSourceId) {
 			this.mBindingOptions = this.mBindingOptions || {};
 			this.mBindingOptions[sCollectionId] = this.mBindingOptions[sCollectionId] || {};
 
@@ -370,7 +380,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			};
 
 		},
-		getCustomFilter: function(sPath, vValueLT, vValueGT) {
+		getCustomFilter: function (sPath, vValueLT, vValueGT) {
 			if (vValueLT !== "" && vValueGT !== "") {
 				return new sap.ui.model.Filter([
 					new sap.ui.model.Filter(sPath, sap.ui.model.FilterOperator.GT, vValueGT),
@@ -383,25 +393,25 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			return new sap.ui.model.Filter(sPath, sap.ui.model.FilterOperator.GT, vValueGT);
 
 		},
-		getCustomFilterString: function(bIsNumber, sPath, sOperator, vValueLT, vValueGT) {
+		getCustomFilterString: function (bIsNumber, sPath, sOperator, vValueLT, vValueGT) {
 			switch (sOperator) {
-				case sap.ui.model.FilterOperator.LT:
-					return sPath + (bIsNumber ? ' (Less than ' : ' (Before ') + vValueLT + ')';
-				case sap.ui.model.FilterOperator.GT:
-					return sPath + (bIsNumber ? ' (More than ' : ' (After ') + vValueGT + ')';
-				default:
-					if (bIsNumber) {
-						return sPath + ' (More than ' + vValueGT + ' and less than ' + vValueLT + ')';
-					}
-					return sPath + ' (After ' + vValueGT + ' and before ' + vValueLT + ')';
+			case sap.ui.model.FilterOperator.LT:
+				return sPath + (bIsNumber ? ' (Less than ' : ' (Before ') + vValueLT + ')';
+			case sap.ui.model.FilterOperator.GT:
+				return sPath + (bIsNumber ? ' (More than ' : ' (After ') + vValueGT + ')';
+			default:
+				if (bIsNumber) {
+					return sPath + ' (More than ' + vValueGT + ' and less than ' + vValueLT + ')';
+				}
+				return sPath + ' (After ' + vValueGT + ' and before ' + vValueLT + ')';
 			}
 
 		},
-		filterCountFormatter: function(sValue1, sValue2) {
+		filterCountFormatter: function (sValue1, sValue2) {
 			return sValue1 !== "" || sValue2 !== "" ? 1 : 0;
 
 		},
-		_onButtonPress2: function(oEvent) {
+		_onButtonPress2: function (oEvent) {
 
 			var sDialogName = "Dialog4";
 			this.mDialogs = this.mDialogs || {};
@@ -420,8 +430,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			oDialog.open();
 
 		},
-		_onButtonPress3: function(oEvent) {
-			
+		_onButtonPress3: function (oEvent) {
+
 			var sDialogName = "Dialog3";
 			this.mDialogs = this.mDialogs || {};
 			var oDialog = this.mDialogs[sDialogName];
@@ -439,33 +449,48 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			oDialog.open();
 
 		},
-		_onOverflowToolbarButtonPress1: function(oEvent) {
+		_onOverflowToolbarButtonPress1: function (oEvent) {
+			var oView = this.getView(),
+				oTable = oView.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084"),
+				aProperties = oTable.getSelectedContexts().map(function (oContext) {
+					return Object.assign({}, oContext.getProperty());
+				}),
 
-			var sPopoverName = "Popover1";
-			this.mPopovers = this.mPopovers || {};
-			var oPopover = this.mPopovers[sPopoverName];
+				oPOSet = new Set(aProperties.map(function (mProperty) {
+					return mProperty.ebeln;
+				})),
+				text = "";
 
-			if (!oPopover) {
-				oPopover = new Popover1(this.getView());
-				this.mPopovers[sPopoverName] = oPopover;
+			if (oPOSet.size > 1) {
+				MessageToast.show("Selecione apenas um material por vez!");
+			} else {
 
-				oPopover.getControl().setPlacement("PreferredLeftOrFlip");
+				var sPopoverName = "Popover1";
+				this.mPopovers = this.mPopovers || {};
+				var oPopover = this.mPopovers[sPopoverName];
 
-				// For navigation.
-				oPopover.setRouter(this.oRouter);
+				if (!oPopover) {
+					oPopover = new Popover1(this.getView());
+					this.mPopovers[sPopoverName] = oPopover;
+
+					oPopover.getControl().setPlacement("PreferredLeftOrFlip");
+
+					// For navigation.
+					oPopover.setRouter(this.oRouter);
+				}
+
+				var oSource = oEvent.getSource();
+
+				oPopover.open(oSource);
+
 			}
-
-			var oSource = oEvent.getSource();
-
-			oPopover.open(oSource);
-
 		},
-		onInit: function() {
+		onInit: function () {
 			this.oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			this.oRouter.getTarget("Page1").attachDisplay(jQuery.proxy(this.handleRouteMatched, this));
 		},
-		
-		onExit: function() {
+
+		onExit: function () {
 
 			// to destroy templates for bound aggregations when templateShareable is true on exit to prevent duplicateId issue
 			var aControls = [{
@@ -487,52 +512,46 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			}
 
 		},
-		
-		
-		getItens: function(itItens) {		
-			
-			 var aSelectedItems = [];
-			
-			for (var i=0; i<itItens.getSelectedIndices().length;i++) {
-				
-				aSelectedItems.push(itItens.getSelectedIndices()[i]);
-				}
-			
+
+		getItens: function (itItens) {
+			var aProperties = itItens.getSelectedItems();
+			var aSelectedItems = [];
+
+			for (var i = 0; i < aProperties.length; i++) {
+
+				aSelectedItems.push(aProperties[i]);
+			}
+
 			// Retorna todos os itens selecionados na tela
 			return aSelectedItems;
 		},
 
+		changeItens: function (ivStats) {
 
+		
+			var table = this.getView().byId('sap_Responsive_Page_0-content-build_simple_Table-1559072229084'),
+			// var ltIndex = this.getView().getController().getItens(aItems);
+			oModel = this.getView().getModel(),
+			context = table.getSelectedContexts();
 
-		changeItens: function( ivStats ) {	
-			
-//			Busca itens selecionados na tela
-			var aItems  = this.getView().byId('sap_Responsive_Page_0-content-build_simple_Table-1559072229084');
-			var ltIndex = this.getView().getController().getItens(aItems);
-			var oModel  = this.getView().getModel();
-			
-			
-//			Define status a ser modificado e texto do novo Status
+			//			Define status a ser modificado e texto do novo Status
 			if (ivStats === "1") {
-				var modifStats	  = ""		 ;
+				var modifStats = "";
 				var modifStatsTxt = "Emitido";
 			} else {
-				modifStats    = "1"			;
+				modifStats = "1";
 				modifStatsTxt = "Finalizado";
 			}
-			
-	
-//			Modifica itens
-			for (var i=0; i<ltIndex.length;i++) {
-    		
-    		if (oModel.getProperty(aItems.getRows()[ltIndex[i]].getBindingContext().sPath + "/stats") === modifStats ) {
-    			
-    			oModel.setProperty(aItems.getRows()[ltIndex[i]].getBindingContext().sPath +"/stats"	   , ivStats       );
-				oModel.setProperty(aItems.getRows()[ltIndex[i]].getBindingContext().sPath +"/stats_txt", modifStatsTxt );	
-    			}  
-			}	
+
+			for (var x = 0; x < context.length; x++) {
+				if (oModel.getProperty(context[x].sPath + "/stats") === modifStats) {
+					oModel.setProperty(context[x].sPath + "/stats", ivStats);
+					oModel.setProperty(context[x].sPath + "/stats_txt", modifStatsTxt);
+				}
+			}
+
 		},
-		 
+
 		_onSearchFieldLiveChangeD: function (oEvent) {
 			var sQuery = oEvent.getSource().getValue();
 			this.bindListSearchD(this.pushFiltrosD(sQuery));
@@ -552,191 +571,196 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			var binding = list.getBinding();
 			binding.filter(Filtro, "Application");
 		},
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		_onOverflowToolbarButtonExport: function (oEvent) {
-			// var lvPath	= oEvent.getSource().getParent().getBindingContext().sPath + "/to_zewm_cds_i_conf";
-			var lvPath	= this.getView().byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084").getBinding().sPath;
-			var oExport = new Export({
+			var contexto  = this.getView().byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084").getSelectedContexts();
+			var path = contexto[0].sPath;
+			var lvPath = this.getView().byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084").getBinding();
+		
+			var oView = this.getView(),
+				oTable = oView.byId("sap_Responsive_Page_0-content-build_simple_Table-1559072229084"),
+				aProperties = oTable.getSelectedContexts().map(function (oContext) {
+					return Object.assign({}, oContext.getProperty());
+				});
 			
+			var value = aProperties.map(function (mContext) {
+				return mContext;
+			});
+		
+		
+		
+			var oExport = new Export({
+
 				// Type that will be used to generate the content. Own ExportType's can be created to support other formats
-				exportType : new ExportTypeCSV({
-					separatorChar : ";"
+				exportType: new ExportTypeCSV({
+					separatorChar: ";"
 				}),
+				
+				
+				
+				
+				
 
 				// Pass in the model created above
-				models : this.getView().getModel(),
-				
+				models: this.getView().getModel(),
+
 				// binding information for the rows aggregation
-				rows : {
-					path : lvPath
+				rows: {
+					path: "/ZCDS_CONTROLE_INC02"
 				},
 
 				// column definitions with column name and binding info for the content
 
-				columns : [
-					{
-					name : "Material",
-					template : {
-						content : "{matnr}"
-					}	 
-				}, {
-					name : "Quantidade",
-					template : {
-						content : "{menge}"
-					}	 
-				}, {
-					name : "Lote",
-					template : {
-						content : "{lote}"
+				columns: [{
+					name: "Material",
+					template: {
+						content: "{matnr}"
 					}
 				}, {
-					name : "Pedido",
-					template : {
-						content : "{ebeln}"
+					name: "Quantidade",
+					template: {
+						content: "{menge}"
 					}
 				}, {
-					name : "Item",
-					template : {
-						content : "{ebelp}"
+					name: "Lote",
+					template: {
+						content: "{lote}"
 					}
 				}, {
-					name : "Lote Agrícola",
-					template : {
-						content : "{loteagr}"
+					name: "Pedido",
+					template: {
+						content: "{ebeln}"
 					}
 				}, {
-					name : "Empresa",
-					template : {
-						content : "{bukrs}"
+					name: "Item",
+					template: {
+						content: "{ebelp}"
 					}
 				}, {
-					name : "Licença",
-					template : {
-						content : "{licen}"
+					name: "Lote Agrícola",
+					template: {
+						content: "{loteagr}"
 					}
 				}, {
-					name : "Data Importação",
-					template : {
-						content : "{ path: 'dtimp', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { pattern: 'dd/MM/yyyy' }}"
+					name: "Empresa",
+					template: {
+						content: "{bukrs}"
 					}
 				}, {
-					name : "Status",
-					template : {
-						content : "{stats_txt}"
-					}
-				}, { 
-					name : "Impressão",
-					template : {
-						content : "{impre_txt}"
+					name: "Licença",
+					template: {
+						content: "{licen}"
 					}
 				}, {
-					name : "Dados QM",
-					template : {
-						content : "{= ${ddsqm} === 'X' ? true : false }"
+					name: "Data Importação",
+					template: {
+						content: "{ path: 'dtimp', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { pattern: 'dd/MM/yyyy' }}"
 					}
 				}, {
-					name : "Nacionalidade",
-					template : {
-						content : "{nacio}"
+					name: "Status",
+					template: {
+						content: "{stats_txt}"
 					}
 				}, {
-					name : "Nome",
-					template : {
-						content : "{nome}"
+					name: "Impressão",
+					template: {
+						content: "{impre_txt}"
 					}
 				}, {
-					name : "Endereço",
-					template : {
-						content : "{ender}"
+					name: "Dados QM",
+					template: {
+						content: "{= ${ddsqm} === 'X' ? true : false }"
 					}
 				}, {
-					name : "Resp. Certificado de Análise",
-					template : {
-						content : "{respca}"
-					}	
-				}, {
-					name : "Cargo",
-					template : {
-						content : "{cargo}"
+					name: "Nacionalidade",
+					template: {
+						content: "{nacio}"
 					}
 				}, {
-					name : "País",
-					template : {
-						content : "{pais}"
+					name: "Nome",
+					template: {
+						content: "{nome}"
 					}
 				}, {
-					name : "Empresa",
-					template : {
-						content : "{emp}"
+					name: "Endereço",
+					template: {
+						content: "{ender}"
 					}
 				}, {
-					name : "Data da recepção",
-					template : {
-						content : "{dtresp}"
+					name: "Resp. Certificado de Análise",
+					template: {
+						content: "{respca}"
 					}
 				}, {
-					name : "Data da análise",
-					template : {
-						content : "{dtanalis}"
+					name: "Cargo",
+					template: {
+						content: "{cargo}"
 					}
 				}, {
-					name : "Impureza 1",
-					template : {
-						content : "{impu1_txt}"
+					name: "País",
+					template: {
+						content: "{pais}"
 					}
 				}, {
-					name : "%",
-					template : {
-						content : "{impu1}"
+					name: "Empresa",
+					template: {
+						content: "{emp}"
 					}
 				}, {
-					name : "Impureza 2",
-					template : {
-						content : "{impu2_txt}"
-					}	
+					name: "Data da recepção",
+					template: {
+						content: "{dtresp}"
+					}
 				}, {
-					name : "%",
-					template : {
-						content : "{impu2_txt}"
-					}	
+					name: "Data da análise",
+					template: {
+						content: "{dtanalis}"
+					}
 				}, {
-					name : "Impureza 3",
-					template : {
-						content : "{impu3_txt}"
-					}	
+					name: "Impureza 1",
+					template: {
+						content: "{impu1_txt}"
+					}
 				}, {
-					name : "%",
-					template : {
-						content : "{impu3_txt}"
-					}	
+					name: "%",
+					template: {
+						content: "{impu1}"
+					}
 				}, {
-					name : "Responsável pela amostragem",
-					template : {
-						content : "{respamo}"
+					name: "Impureza 2",
+					template: {
+						content: "{impu2_txt}"
+					}
+				}, {
+					name: "%",
+					template: {
+						content: "{impu2_txt}"
+					}
+				}, {
+					name: "Impureza 3",
+					template: {
+						content: "{impu3_txt}"
+					}
+				}, {
+					name: "%",
+					template: {
+						content: "{impu3_txt}"
+					}
+				}, {
+					name: "Responsável pela amostragem",
+					template: {
+						content: "{respamo}"
 					}
 				}]
 			});
 
 			// download exported file
-			oExport.saveFile().catch(function(oError) {
+			oExport.saveFile().catch(function (oError) {
 				MessageBox.error("Error when downloading data. Browser might not be supported!\n\n" + oError);
-			}).then(function() {
+			}).then(function () {
 				oExport.destroy();
 			});
 		},
-	
-		
 
-
-		
 	});
 }, /* bExport= */ true);
